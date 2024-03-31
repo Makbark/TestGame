@@ -8,32 +8,38 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestGame extends Application {
     private Pane root = new Pane();
-    private ArrayList<Enemy> enemies = new ArrayList<>();
-    private Player player = new Player(300, 750, 40, 40, "player", Color.PURPLE, new ArrayList<Enemy>(),root);
+
+    private HashMap<String,ArrayList<Sprite>> sprites = new HashMap();
+    private Player player = new Player(275, 600, 40, 40, "player", Color.PURPLE, new ArrayList<Sprite>(),root);
     private Scene scene = new Scene(createContent());
     private PlayerController playerCon = new PlayerController(scene, player);
     private EnemyController enemyCon;
     private double t = 0;
     private boolean running = true;
+    private Stage stage;
     @Override
     public void start(Stage stage) throws Exception {
-
+        this.stage = stage;
         timer.start();
         timer2.start();
         playerCon.movementSetup();
         nextLevel();
 
-        for(Enemy enemy: enemies){
+        for(Sprite enemy: sprites){
+            if(enemy instanceof MovableSprite){
+                enemyCon = new EnemyController(enemy);
+                enemyCon.enemyMovment(enemyCon.LEFT);
+                System.out.println("o");
+            }
 
-            enemyCon = new EnemyController(enemy);
-            enemyCon.enemyMovment(enemyCon.LEFT);
-            System.out.println("o");
         }
         stage.setScene(scene);
         stage.show();
@@ -48,7 +54,7 @@ public class TestGame extends Application {
         public void handle(long timestamp) {
 
             player.getCollision();
-            //System.out.println(player.getLayoutX());
+            System.out.println(player.getLayoutX());
             //checks the boolean value of if the key is press and if it is it will move in the direction of corresponding key
             if(player.getW_pressed()){
                 player.moveUp();
@@ -70,21 +76,24 @@ public class TestGame extends Application {
         public void handle(long timestamp) {
 
 
-            for(Enemy enemy: enemies){
-                enemy.getCollision();
-                //System.out.println(enemy.getLayoutX());
-                if(enemy.getMovingLeft()){
-                    enemy.moveLeft();
+            for(Sprite enemy: sprites){
+                if(enemy instanceof Enemy){
+                    enemy.getCollision();
+                    //System.out.println(enemy.getLayoutX());
+                    if(enemy.getMovingLeft()){
+                        enemy.moveLeft();
+                    }
+                    if(enemy.getMovingRight()){
+                        enemy.moveRight();
+                    }
+                    if(enemy.getMovingUp()){
+                        enemy.moveUp();
+                    }
+                    if(enemy.getMovingDown()){
+                        enemy.moveDown();
+                    }
                 }
-                if(enemy.getMovingRight()){
-                    enemy.moveRight();
-                }
-                if(enemy.getMovingUp()){
-                    enemy.moveUp();
-                }
-                if(enemy.getMovingDown()){
-                    enemy.moveDown();
-                }
+
             }
 
 
@@ -93,32 +102,60 @@ public class TestGame extends Application {
     };
 
     private Parent createContent(){
-
+        //root.setLayoutX(0);
+        //root.setLayoutY(0);
+        root.setMaxWidth(600);
+        root.setMaxHeight(800);
         root.setPrefSize(600,800);
-        root.getChildren().add(player);//might not work
-
+        root.getChildren().add(player);
+        //System.out.println(root.getLayoutBounds());
         return root;
     }
 
     private void nextLevel() {
+        ArrayList<Sprite> bariers = new ArrayList<>();
 
+        Barier top_barier = new Barier(0, 0,600,100,"barier",Color.BLACK);
+        Barier left_barier = new Barier(0,100,70,800,"barier",Color.BLACK);
+        Barier right_barier = new Barier(530, 100,70,700,"barier",Color.BLACK);
+        Barier bottom_barier = new Barier(70, 730,460,100,"barier",Color.BLACK);
+
+        bariers.add(top_barier);
+        bariers.add(left_barier);
+        bariers.add(right_barier);
+        bariers.add(bottom_barier);
+
+        sprites.put("Bariers", bariers);
+
+        root.getChildren().add(top_barier);
+        root.getChildren().add(left_barier);
+        root.getChildren().add(right_barier);
+        root.getChildren().add(bottom_barier);
         //creates the enemies
+
+        ArrayList<Sprite> enemies = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
 
-            Enemy s = new Enemy(90 + i*100, 150, 30, 30, "enemy", Color.RED, new ArrayList<Enemy>(), root);
+            Sprite enemy = new Enemy(90 + i*100, 150, 30, 30, "enemy", Color.RED, new ArrayList<Sprite>(),root);
             //add to array list of enemies
 
-            enemies.add(s);
-            root.getChildren().add(s);
-            player.addEnemies(s);
+            if(!sprites.containsKey("Enemies")){
+                sprites.put("Enemies", enemies);
+            }
+            sprites.get("Enemies").add(enemy);
+            root.getChildren().add(enemy);
+            player.addEnemies(enemy);
         }
 
-        for(Enemy enemy: enemies){
-            for(int i = 0; i < enemies.size(); i++) {
-                if(enemies.get(i) != enemy){
-                    enemy.addEnemies(enemies.get(i));
+        for(Sprite enemy: sprites){
+            if (enemy instanceof Enemy) {
+                for(int i = 0; i < sprites.size(); i++) {
+                    if(sprites.get(i) != enemy){
+                        enemy.addEnemies(sprites.get(i));
+                    }
                 }
             }
+
         }
 
 

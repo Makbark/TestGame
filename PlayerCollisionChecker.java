@@ -8,12 +8,12 @@ public class PlayerCollisionChecker implements CollisionChecker {
 
 
     private Player player;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<Sprite> enemies;
     private Pane root;
     private boolean playerCollision = false;
     private boolean enemyCollision = false;
 
-    PlayerCollisionChecker(Player player, ArrayList<Enemy> enemies, Pane root){
+    PlayerCollisionChecker(Player player, ArrayList<Sprite> enemies, Pane root){
         this.player = player;
         this.enemies = enemies;
         this.root = root;
@@ -25,7 +25,7 @@ public class PlayerCollisionChecker implements CollisionChecker {
                 || !(root.getLayoutBounds().contains((player.getBoundsInParent())));
 
 
-        for(Enemy e : enemies){
+        for(Sprite e : enemies){
             boolean playerCollideEnemy = player.getBoundsInParent().intersects(e.getBoundsInParent());
 
             if(playerCollideEnemy){

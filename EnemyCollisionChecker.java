@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class EnemyCollisionChecker implements CollisionChecker {
     private Enemy enemy;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<Sprite> enemies;
     private Pane root;
     private boolean enemyCollision = false;
 
-    EnemyCollisionChecker(Enemy enemy, ArrayList<Enemy> enemies, Pane root){
+    EnemyCollisionChecker(Enemy enemy, ArrayList<Sprite> enemies, Pane root){
         this.enemy = enemy;
         this.enemies = enemies;
         this.root = root;
@@ -32,11 +32,12 @@ public class EnemyCollisionChecker implements CollisionChecker {
         }
         if (enemyOutOfPanel){
 
-            if(enemy.getLayoutX() <= 10){
-                enemy.setMovingLeft(false);
+            if(enemy.getLayoutX() <= 0){
+               enemy.setMovingLeft(false);
                 enemy.setMovingRight(true);
             }
             if(enemy.getLayoutX() >= right_bound){
+                System.out.println("Something");
                 enemy.setMovingRight(false);
                 enemy.setMovingLeft(true);
             }
@@ -56,6 +57,10 @@ public class EnemyCollisionChecker implements CollisionChecker {
         }
         return enemyCollision;
 
+    }
+
+    public boolean boundryCollision(){
+        return false;
     }
 
 

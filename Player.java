@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
-public class Player extends Rectangle implements Entity {
+public class Player extends MovableSprite{
     boolean dead;
     String type = "Player";
     private double velX = 0.0;
@@ -19,11 +19,11 @@ public class Player extends Rectangle implements Entity {
     private boolean a_pressed = false;
     private boolean s_pressed = false;
     private boolean d_pressed = false;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<Sprite> enemies;
     private Pane root;
     private PlayerCollisionChecker collChecker;
 
-    Player(int x, int y, int w, int h, String type, Color color,ArrayList<Enemy> enemies, Pane root) {
+    Player(int x, int y, int w, int h, String type, Color color,ArrayList<Sprite> enemies ,Pane root) {
         super(w, h, color);
         this.type = type;
         this.enemies = enemies;
@@ -49,7 +49,7 @@ public class Player extends Rectangle implements Entity {
         setLayoutY(getLayoutY() + movementVariable);
     }
 
-    @Override
+
     public boolean getCollision() {
         return collChecker.collision(-300,260,-750,10);
     }
@@ -81,8 +81,8 @@ public class Player extends Rectangle implements Entity {
         this.velY = velY;
     }
 
-    public void addEnemies(Enemy enemy){
-        enemies.add(enemy);
+    public void addSprites(Sprite sprite){
+        enemies.add(sprite);
 
     }
 }

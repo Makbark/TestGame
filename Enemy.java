@@ -6,7 +6,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
-public class Enemy extends Rectangle implements Entity {
+public class Enemy extends MovableSprite {
     boolean dead;
     String type = "Player";
     private double velX = 0.0;
@@ -18,11 +18,11 @@ public class Enemy extends Rectangle implements Entity {
     private boolean movingLeft = false;
     private boolean movingDown = false;
     private boolean movingRight = false;
-    private ArrayList<Enemy> enemies;
+    private ArrayList<Sprite> enemies;
     private Pane root;
     private EnemyCollisionChecker collChecker;
 
-    Enemy(int x, int y, int w, int h, String type, Color color,ArrayList<Enemy> enemies,Pane root) {
+    Enemy(int x, int y, int w, int h, String type, Color color,ArrayList<Sprite> enemies,Pane root) {
         super(w, h, color);
         this.type = type;
         this.enemies = enemies;
@@ -62,15 +62,15 @@ public class Enemy extends Rectangle implements Entity {
 
 
 
-    @Override
+
     public boolean getCollision() {
         return collChecker.collision(0,0,-750,10);
     }
 
-    public void addEnemies(Enemy enemy){
-        enemies.add(enemy);
+    public void addSprites(Sprite sprites){
+        enemies.add(sprites);
     }
-    public ArrayList<Enemy> getEnemies(){
+    public ArrayList<Sprite> getSprites(){
         return enemies;
     }
 }

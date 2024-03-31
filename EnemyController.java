@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class EnemyController extends Thread{
 
-    private Enemy enemy;
+    private Sprite enemy;
     private int ran;
     public final int UP = 0;
     public final int DOWN = 1;
@@ -13,7 +13,7 @@ public class EnemyController extends Thread{
     public final int RIGHT = 3;
 
 
-    EnemyController(Enemy enemy){
+    EnemyController(Sprite enemy){
         this.enemy = enemy;
     }
 
